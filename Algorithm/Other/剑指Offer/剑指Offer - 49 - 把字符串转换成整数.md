@@ -22,21 +22,26 @@
 
 ```java
 public class Solution {
-
     public int StrToInt(String str) {
-        if (str == null || str.trim().equals(""))
+        if (str == null || str.trim().length() == 0) {
             return 0;
-        char[] chs = str.trim().toCharArray();//去除前面的空字符' '
-        int res = 0;
-        for (int i = (chs[0] == '-' || chs[0] == '+') ? 1 : 0; i < str.length(); i++) {
-            if(chs[i] < '0' || chs[i] > '9') return 0; // < 48 || > 57
-            int num = chs[i] - '0'; // chs[i] - 48
-            int sum = res * 10 + num;
-            if((sum - num)/10 != res) // 如果 sum超出范围了，这个表达式就回不到原来的res
-                return 0;
-            res = sum;
         }
-        return chs[0] == '-' ? -res : res;
+        int start = (str.charAt(0) == '+' || str.charAt(0) == '-') ? 1 : 0;
+        long res = 0;
+        for (int i = start; i < str.length(); i++) {
+            if (str.charAt(i) > '9' || str.charAt(i) < '0') {
+                //return后整个方法就结束了，也就是如果里面有非数字型的数值，直接返回0
+                return 0;
+            }
+            res = res * 10 + (str.charAt(i) - '0');
+        }
+        //int 范围为 -2147483648~2147483647
+        if (str.charAt(0) == '-') {
+            res = -res;
+            return res < Integer.MIN_VALUE ? 0 : (int) res;
+        } else {
+            return res > Integer.MAX_VALUE ? 0 : (int) res;
+        }
     }
 }
 ```
